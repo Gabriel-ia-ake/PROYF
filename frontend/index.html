@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Inventario Textil</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-tshirt"></i>
+                <h1>Sistema de Inventario Textil</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="pages/productos.html" class="nav-link">
+                    <i class="fas fa-box"></i> Productos
+                </a>
+                <a href="pages/inventario.html" class="nav-link">
+                    <i class="fas fa-chart-bar"></i> Inventario
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>🧵 Gestión de Inventario Textil</h2>
+                    <p>Sistema automatizado para el control eficiente de productos textiles</p>
+                    <div class="hero-buttons">
+                        <a href="pages/productos.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ver Productos
+                        </a>
+                        <a href="pages/inventario.html" class="btn btn-secondary">
+                            <i class="fas fa-chart-line"></i> Ver Inventario
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="stats-section">
+                <h3>Resumen del Sistema</h3>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 id="totalProductos">Cargando...</h4>
+                            <p>Total de Productos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 id="stockBajo">Cargando...</h4>
+                            <p>Productos con Stock Bajo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 id="valorTotal">Cargando...</h4>
+                            <p>Valor Total del Inventario</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h3>Acciones Rápidas</h3>
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <h4>Agregar Producto</h4>
+                        <p>Registrar nueva tela o material</p>
+                        <a href="pages/productos.html#agregar" class="btn btn-sm btn-primary">Agregar</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <i class="fas fa-search"></i>
+                        <h4>Buscar Producto</h4>
+                        <p>Encontrar tela por código o nombre</p>
+                        <a href="pages/productos.html#buscar" class="btn btn-sm btn-secondary">Buscar</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <i class="fas fa-file-download"></i>
+                        <h4>Generar Reporte</h4>
+                        <p>Descargar reporte de inventario</p>
+                        <button class="btn btn-sm btn-outline" onclick="generarReporte()">Descargar</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Sistema de Inventario Textil - Desarrollado por:</p>
+            <div class="team">
+                <span>Gabriel Alor</span> | 
+                <span>Fabio Falcón</span> | 
+                <span>Lucila Gálvez</span> | 
+                <span>Oscar Santa Cruz</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
