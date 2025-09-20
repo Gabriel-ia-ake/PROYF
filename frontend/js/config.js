@@ -9,8 +9,8 @@ const CONFIG = {
     REQUEST_TIMEOUT: 5000,
     
     MESSAGES: {
-        LOADING: 'Cargando...',
-        ERROR_NETWORK: 'Error de conexión. Verifica que el servidor esté ejecutándose.',
+        LOADING: 'Cargando',
+        ERROR_NETWORK: 'Error de conexión',
         ERROR_GENERIC: 'Ha ocurrido un error inesperado',
         SUCCESS_CREATE: 'Producto creado exitosamente',
         SUCCESS_UPDATE: 'Producto actualizado exitosamente',
@@ -121,6 +121,5 @@ function debug(...args) {
         console.log('[DEBUG]', ...args);
     }
 }
-
 console.log('✅ Configuración cargada correctamente');
 console.log('🔗 API Base URL:', API_BASE_URL);

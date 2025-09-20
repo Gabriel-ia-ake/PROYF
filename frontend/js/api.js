@@ -16,12 +16,9 @@ class ApiClient {
 
         try {
             debug('Making request to:', url, config);
-            
             const response = await fetch(url, config);
             const data = await response.json();
-            
             debug('Response:', data);
-            
             if (!response.ok) {
                 throw new Error(data.message || `Error ${response.status}`);
             }
@@ -29,7 +26,6 @@ class ApiClient {
             return data;
         } catch (error) {
             console.error('API Error:', error);
-            
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 throw new Error(CONFIG.MESSAGES.ERROR_NETWORK);
             }
@@ -62,9 +58,7 @@ class ApiClient {
 }
 
 const api = new ApiClient(API_BASE_URL);
-
 const ProductosAPI = {
-    // Obtener todos los productos
     async getAll() {
         try {
             toggleLoading(true);
