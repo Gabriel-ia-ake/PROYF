@@ -1,14 +1,8 @@
-// =====================================================
-// CLIENTE API - SISTEMA INVENTARIO TEXTIL
-// =====================================================
-
-// Clase para manejar todas las llamadas a la API
 class ApiClient {
     constructor(baseURL) {
         this.baseURL = baseURL;
     }
 
-    // Método genérico para hacer requests
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
         
@@ -36,7 +30,6 @@ class ApiClient {
         } catch (error) {
             console.error('API Error:', error);
             
-            // Manejar errores de red
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 throw new Error(CONFIG.MESSAGES.ERROR_NETWORK);
             }
@@ -45,12 +38,10 @@ class ApiClient {
         }
     }
 
-    // GET request
     async get(endpoint) {
         return this.request(endpoint, { method: 'GET' });
     }
 
-    // POST request
     async post(endpoint, data) {
         return this.request(endpoint, {
             method: 'POST',
@@ -58,7 +49,6 @@ class ApiClient {
         });
     }
 
-    // PUT request
     async put(endpoint, data) {
         return this.request(endpoint, {
             method: 'PUT',
@@ -66,20 +56,13 @@ class ApiClient {
         });
     }
 
-    // DELETE request
     async delete(endpoint) {
         return this.request(endpoint, { method: 'DELETE' });
     }
 }
 
-// Instancia del cliente API
 const api = new ApiClient(API_BASE_URL);
 
-// =====================================================
-// FUNCIONES ESPECÍFICAS DE LA API
-// =====================================================
-
-// Funciones para productos
 const ProductosAPI = {
     // Obtener todos los productos
     async getAll() {
@@ -95,7 +78,6 @@ const ProductosAPI = {
         }
     },
 
-    // Obtener producto por ID
     async getById(id) {
         try {
             const response = await api.get(`/api/productos/${id}`);
@@ -106,7 +88,6 @@ const ProductosAPI = {
         }
     },
 
-    // Crear nuevo producto
     async create(productData) {
         try {
             toggleLoading(true);
@@ -121,7 +102,6 @@ const ProductosAPI = {
         }
     },
 
-    // Validar datos del producto antes de enviar
     validate(productData) {
         const rules = {
             codigo: {
@@ -147,9 +127,7 @@ const ProductosAPI = {
     }
 };
 
-// Funciones para inventario
 const InventarioAPI = {
-    // Obtener resumen del inventario
     async getResumen() {
         try {
             toggleLoading(true);
@@ -164,11 +142,7 @@ const InventarioAPI = {
     }
 };
 
-// =====================================================
-// FUNCIONES DE UTILIDAD PARA LA UI
-// =====================================================
 
-// Función para poblar una tabla con datos de productos
 function populateProductsTable(productos, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -231,7 +205,6 @@ function populateProductsTable(productos, containerId) {
     container.innerHTML = tableHTML;
 }
 
-// Función para llenar estadísticas en el dashboard
 function updateDashboardStats(statsData) {
     const elements = {
         totalProductos: document.getElementById('totalProductos'),
@@ -246,7 +219,6 @@ function updateDashboardStats(statsData) {
     if (elements.stockBajo) {
         elements.stockBajo.textContent = statsData.productosStockBajo || '0';
         
-        // Cambiar color si hay productos con stock bajo
         const parentCard = elements.stockBajo.closest('.stat-card');
         if (parentCard && statsData.productosStockBajo > 0) {
             parentCard.classList.add('warning');
@@ -258,7 +230,6 @@ function updateDashboardStats(statsData) {
     }
 }
 
-// Función para generar reporte (placeholder)
 async function generarReporte() {
     try {
         showAlert('Generando reporte...', 'info');
@@ -266,7 +237,6 @@ async function generarReporte() {
         const productos = await ProductosAPI.getAll();
         const inventario = await InventarioAPI.getResumen();
         
-        // Crear datos del reporte
         const reportData = {
             fecha: new Date().toLocaleDateString('es-PE'),
             totalProductos: inventario.totalProductos,
@@ -275,7 +245,6 @@ async function generarReporte() {
             productos: productos
         };
         
-        // Convertir a texto plano para descarga
         const reportText = generateReportText(reportData);
         downloadTextFile(reportText, `reporte-inventario-${new Date().toISOString().split('T')[0]}.txt`);
         
@@ -286,7 +255,6 @@ async function generarReporte() {
     }
 }
 
-// Función para generar texto del reporte
 function generateReportText(data) {
     return `
 REPORTE DE INVENTARIO TEXTIL
@@ -312,7 +280,6 @@ Equipo: Gabriel, Fabio, Lucila, Oscar
     `.trim();
 }
 
-// Función para descargar archivo de texto
 function downloadTextFile(content, filename) {
     const blob = new Blob([content], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -325,10 +292,8 @@ function downloadTextFile(content, filename) {
     window.URL.revokeObjectURL(url);
 }
 
-// Función para ver detalle de producto (placeholder)
 function verDetalle(productId) {
     showAlert(`Ver detalle del producto ID: ${productId}`, 'info');
-    // Aquí se puede implementar un modal o redirección
 }
 
-console.log('✅ Cliente API cargado correctamente');
+console.log('Cliente API cargado');

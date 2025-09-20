@@ -1,4 +1,3 @@
-// Configuración de Swagger para documentar la API
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const swaggerOptions = {
@@ -159,7 +158,7 @@ const swaggerOptions = {
       }
     }
   },
-  apis: ['./src/server.js'], // ✅ Ruta correcta // Archivos que contienen las rutas documentadas
+  apis: ['./src/server.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

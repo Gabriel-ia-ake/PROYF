@@ -1,23 +1,13 @@
-// =====================================================
-// CONFIGURACIÓN DEL FRONTEND
-// =====================================================
-
-// URL de la API backend
 const API_BASE_URL = 'http://localhost:3001';
-
-// Endpoints de la API
 const API_ENDPOINTS = {
     productos: `${API_BASE_URL}/api/productos`,
     inventario: `${API_BASE_URL}/api/inventario`,
     productoById: (id) => `${API_BASE_URL}/api/productos/${id}`
 };
 
-// Configuración global
 const CONFIG = {
-    // Tiempo de espera para requests (en millisegundos)
     REQUEST_TIMEOUT: 5000,
     
-    // Mensajes de la aplicación
     MESSAGES: {
         LOADING: 'Cargando...',
         ERROR_NETWORK: 'Error de conexión. Verifica que el servidor esté ejecutándose.',
@@ -27,7 +17,6 @@ const CONFIG = {
         SUCCESS_DELETE: 'Producto eliminado exitosamente'
     },
     
-    // Validaciones
     VALIDATION: {
         CODIGO_MIN_LENGTH: 3,
         CODIGO_MAX_LENGTH: 20,
@@ -36,9 +25,7 @@ const CONFIG = {
     }
 };
 
-// Función para mostrar alertas
 function showAlert(message, type = 'info', duration = 5000) {
-    // Crear el elemento de alerta
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.innerHTML = `
@@ -47,11 +34,9 @@ function showAlert(message, type = 'info', duration = 5000) {
         <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
     `;
     
-    // Agregar al DOM
     const container = document.querySelector('.container') || document.body;
     container.insertBefore(alertDiv, container.firstChild);
     
-    // Auto-eliminar después del tiempo especificado
     if (duration > 0) {
         setTimeout(() => {
             if (alertDiv && alertDiv.parentNode) {
@@ -61,7 +46,6 @@ function showAlert(message, type = 'info', duration = 5000) {
     }
 }
 
-// Función para obtener el icono según el tipo de alerta
 function getAlertIcon(type) {
     const icons = {
         success: 'check-circle',
@@ -72,7 +56,6 @@ function getAlertIcon(type) {
     return icons[type] || icons.info;
 }
 
-// Función para mostrar/ocultar loading
 function toggleLoading(show = true) {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) {
@@ -84,7 +67,6 @@ function toggleLoading(show = true) {
     }
 }
 
-// Función para formatear números como moneda
 function formatCurrency(amount) {
     return new Intl.NumberFormat('es-PE', {
         style: 'currency',
@@ -92,7 +74,6 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-// Función para formatear fechas
 function formatDate(dateString) {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-PE', {
@@ -104,7 +85,6 @@ function formatDate(dateString) {
     }).format(date);
 }
 
-// Función para validar formularios
 function validateForm(formData, rules) {
     const errors = [];
     
@@ -136,7 +116,6 @@ function validateForm(formData, rules) {
     return errors;
 }
 
-// Función para debug (solo en desarrollo)
 function debug(...args) {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('[DEBUG]', ...args);

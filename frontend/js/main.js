@@ -1,23 +1,13 @@
-// =====================================================
-// JAVASCRIPT PRINCIPAL - SISTEMA INVENTARIO TEXTIL
-// =====================================================
-
-// Ejecutar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Sistema de Inventario Textil iniciado');
-    
-    // Inicializar la aplicación
+    console.log('Sistema de Inventario Textil iniciado');
     initApp();
 });
 
-// Función principal de inicialización
 async function initApp() {
     try {
-        // Verificar si estamos en la página principal
         const currentPage = getCurrentPage();
         console.log('📄 Página actual:', currentPage);
         
-        // Ejecutar funciones específicas según la página
         switch(currentPage) {
             case 'index':
                 await initDashboard();
@@ -29,19 +19,17 @@ async function initApp() {
                 await initInventario();
                 break;
             default:
-                console.log('Página no reconocida, cargando funcionalidades básicas');
+                console.log('Página no reconocida');
         }
         
-        // Inicializar funcionalidades globales
         initGlobalFeatures();
         
     } catch (error) {
-        console.error('Error al inicializar la aplicación:', error);
-        showAlert('Error al cargar la aplicación. Verifica que el servidor esté ejecutándose.', 'error');
+        console.error('Error:', error);
+        showAlert('Error. Verifica que el servidor esté ejecutándose.', 'error');
     }
 }
 
-// Función para obtener la página actual
 function getCurrentPage() {
     const path = window.location.pathname;
     const filename = path.split('/').pop();
@@ -57,14 +45,10 @@ function getCurrentPage() {
     return 'unknown';
 }
 
-// =====================================================
-// INICIALIZACIÓN DEL DASHBOARD (PÁGINA PRINCIPAL)
-// =====================================================
 async function initDashboard() {
     console.log('🏠 Inicializando dashboard...');
     
     try {
-        // Cargar estadísticas del inventario
         const statsData = await InventarioAPI.getResumen();
         updateDashboardStats(statsData);
         
@@ -73,7 +57,6 @@ async function initDashboard() {
     } catch (error) {
         console.error('Error al cargar dashboard:', error);
         
-        // Mostrar valores por defecto en caso de error
         updateDashboardStats({
             totalProductos: 'Error',
             productosStockBajo: 'Error',
@@ -82,33 +65,26 @@ async function initDashboard() {
     }
 }
 
-// =====================================================
-// INICIALIZACIÓN DE PRODUCTOS
-// =====================================================
 async function initProductos() {
     console.log('📦 Inicializando página de productos...');
     
     try {
-        // Cargar lista de productos
         await loadProductsList();
         
-        // Inicializar formulario si existe
         initProductForm();
         
-        console.log('✅ Página de productos cargada correctamente');
+        console.log('Página de productos cargada');
         
     } catch (error) {
         console.error('Error al cargar productos:', error);
     }
 }
 
-// Función para cargar la lista de productos
 async function loadProductsList() {
     try {
         const productos = await ProductosAPI.getAll();
         populateProductsTable(productos, 'productosTableContainer');
         
-        // Actualizar contador si existe
         const contador = document.getElementById('productosCount');
         if (contador) {
             contador.textContent = productos.length;
@@ -117,7 +93,6 @@ async function loadProductsList() {
     } catch (error) {
         console.error('Error al cargar lista de productos:', error);
         
-        // Mostrar mensaje de error en la tabla
         const container = document.getElementById('productosTableContainer');
         if (container) {
             container.innerHTML = `
@@ -130,19 +105,17 @@ async function loadProductsList() {
     }
 }
 
-// Función para inicializar el formulario de productos
 function initProductForm() {
     const form = document.getElementById('productForm');
     if (!form) return;
     
-    console.log('📝 Inicializando formulario de productos...');
+    console.log('Inicializando formulario de productos');
     
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         await handleProductSubmit(form);
     });
     
-    // Auto-formatear código a mayúsculas
     const codigoInput = form.querySelector('#codigo');
     if (codigoInput) {
         codigoInput.addEventListener('input', function(e) {
@@ -151,10 +124,8 @@ function initProductForm() {
     }
 }
 
-// Función para manejar el envío del formulario de productos
 async function handleProductSubmit(form) {
     try {
-        // Obtener datos del formulario
         const formData = new FormData(form);
         const productData = {
             codigo: formData.get('codigo')?.trim().toUpperCase(),
@@ -166,55 +137,41 @@ async function handleProductSubmit(form) {
             stock_minimo: parseInt(formData.get('stock_minimo')) || 5
         };
         
-        // Validar datos
         const errors = ProductosAPI.validate(productData);
         if (errors.length > 0) {
             showAlert(errors.join('<br>'), 'error');
             return;
         }
         
-        // Crear producto
         const nuevoProducto = await ProductosAPI.create(productData);
-        
-        // Limpiar formulario
         form.reset();
-        
-        // Recargar lista de productos
         await loadProductsList();
         
-        console.log('✅ Producto creado:', nuevoProducto);
+        console.log('Producto creado:', nuevoProducto);
         
     } catch (error) {
         console.error('Error al crear producto:', error);
     }
 }
 
-// =====================================================
-// INICIALIZACIÓN DE INVENTARIO
-// =====================================================
+
 async function initInventario() {
-    console.log('📊 Inicializando página de inventario...');
+    console.log('Inicializando página de inventario');
     
     try {
-        // Cargar resumen de inventario
         const inventario = await InventarioAPI.getResumen();
-        
-        // Mostrar estadísticas
         displayInventarioStats(inventario);
-        
-        // Cargar productos con stock bajo si existe la sección
         if (inventario.productosConStockBajo) {
             displayProductosStockBajo(inventario.productosConStockBajo);
         }
         
-        console.log('✅ Página de inventario cargada correctamente');
+        console.log('Página de inventario cargada');
         
     } catch (error) {
         console.error('Error al cargar inventario:', error);
     }
 }
 
-// Función para mostrar estadísticas de inventario
 function displayInventarioStats(data) {
     const container = document.getElementById('inventarioStats');
     if (!container) return;
@@ -254,7 +211,6 @@ function displayInventarioStats(data) {
     `;
 }
 
-// Función para mostrar productos con stock bajo
 function displayProductosStockBajo(productos) {
     const container = document.getElementById('productosStockBajo');
     if (!container) return;
@@ -305,26 +261,17 @@ function displayProductosStockBajo(productos) {
     container.innerHTML = tableHTML;
 }
 
-// =====================================================
-// FUNCIONALIDADES GLOBALES
-// =====================================================
 function initGlobalFeatures() {
-    // Actualizar enlaces de navegación
     updateActiveNavLink();
-    
-    // Inicializar tooltips si hay
     initTooltips();
-    
-    // Manejar errores globales de JavaScript
     window.addEventListener('error', function(e) {
         console.error('Error global capturado:', e.error);
         showAlert('Ha ocurrido un error inesperado', 'error');
     });
     
-    console.log('✅ Funcionalidades globales inicializadas');
+    console.log('Funcionalidades globales inicializadas');
 }
 
-// Función para actualizar el enlace activo en la navegación
 function updateActiveNavLink() {
     const currentPage = getCurrentPage();
     const navLinks = document.querySelectorAll('.nav-link');
@@ -343,23 +290,16 @@ function updateActiveNavLink() {
     });
 }
 
-// Función para inicializar tooltips (si se implementan)
 function initTooltips() {
-    // Placeholder para tooltips futuros
     const elementsWithTooltip = document.querySelectorAll('[data-tooltip]');
     elementsWithTooltip.forEach(element => {
         element.title = element.getAttribute('data-tooltip');
     });
 }
 
-// =====================================================
-// FUNCIONES UTILITARIAS ADICIONALES
-// =====================================================
-
-// Función para refrescar datos
 async function refreshData() {
-    console.log('🔄 Refrescando datos...');
-    showAlert('Actualizando datos...', 'info', 2000);
+    console.log('Refrescando datos');
+    showAlert('Actualizando datos', 'info', 2000);
     
     try {
         const currentPage = getCurrentPage();
@@ -383,24 +323,19 @@ async function refreshData() {
     }
 }
 
-// Función para manejar búsqueda (si se implementa)
 function handleSearch(query) {
-    console.log('🔍 Buscando:', query);
-    // Placeholder para funcionalidad de búsqueda
+    console.log('Buscando:', query);
     showAlert(`Buscando: "${query}"`, 'info');
 }
 
-// Función para exportar datos (placeholder)
 function exportData(format = 'json') {
     showAlert(`Exportando datos en formato ${format}...`, 'info');
-    // Placeholder para exportación de datos
 }
 
-// Hacer funciones disponibles globalmente para uso en HTML
 window.refreshData = refreshData;
 window.handleSearch = handleSearch;
 window.exportData = exportData;
 window.generarReporte = generarReporte;
 window.verDetalle = verDetalle;
 
-console.log('✅ JavaScript principal cargado correctamente');
+console.log('JavaScript principal cargado');

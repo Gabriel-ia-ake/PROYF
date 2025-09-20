@@ -1,81 +1,18 @@
-// =====================================================
 // SERVIDOR CON SWAGGER - SISTEMA INVENTARIO TEXTIL
-// =====================================================
-
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const { query, testConnection } = require('./config/db');
-
 const app = express();
 const PORT = 3001;
-
-// Middlewares
 app.use(cors());
 app.use(express.json());
-
-// Configurar Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Probar conexión a PostgreSQL al iniciar
 testConnection();
 
-// =====================================================
-// RUTAS DE LA API CON DOCUMENTACIÓN SWAGGER
-// =====================================================
-
-/**
- * @swagger
- * /:
- *   get:
- *     summary: Información general de la API
- *     description: Devuelve información básica sobre la API del sistema de inventario textil
- *     tags:
- *       - Información
- *     responses:
- *       200:
- *         description: Información obtenida correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "🧵 API Sistema de Inventario Textil"
- *                 version:
- *                   type: string
- *                   example: "1.0.0"
- *                 status:
- *                   type: string
- *                   example: "Funcionando con PostgreSQL"
- *                 endpoints:
- *                   type: array
- *                   items:
- *                     type: string
- */
-app.get('/', (req, res) => {
-    res.json({
-        message: '🧵 API Sistema de Inventario Textil',
-        version: '1.0.0',
-        status: 'Funcionando con PostgreSQL',
-        documentacion: 'http://localhost:3001/api-docs',
-        equipo: [
-            'ALOR SALAS, GABRIEL ALESSANDRO',
-            'FALCÓN ROJAS, FABIO AMADEO',
-            'GÁLVEZ LEZAMA, LUCILA JACKELINE',
-            'SANTA CRUZ CARBAJAL OSCAR ESTIVEN'
-        ],
-        endpoints: [
-            'GET /api/productos - Listar todos los productos',
-            'GET /api/productos/:id - Obtener producto por ID',
-            'POST /api/productos - Crear nuevo producto',
-            'GET /api/inventario - Resumen del inventario'
-        ]
-    });
-});
-
+// API CON DOCUMENTACIÓN SWAGGER
 /**
  * @swagger
  * /api/productos:
@@ -261,7 +198,6 @@ app.post('/api/productos', async (req, res) => {
     try {
         const { codigo, nombre, tipo_tela, color, precio, stock_actual, stock_minimo } = req.body;
         
-        // Validaciones
         if (!codigo || !nombre || !precio) {
             return res.status(400).json({
                 success: false,
@@ -277,7 +213,6 @@ app.post('/api/productos', async (req, res) => {
             });
         }
         
-        // Insertar en PostgreSQL
         const result = await query(`
             INSERT INTO productos (codigo, nombre, tipo_tela, color, precio, stock_actual, stock_minimo) 
             VALUES ($1, $2, $3, $4, $5, $6, $7) 
@@ -301,7 +236,6 @@ app.post('/api/productos', async (req, res) => {
     } catch (error) {
         console.error('Error al crear producto:', error);
         
-        // Error de código duplicado
         if (error.code === '23505') {
             return res.status(400).json({
                 success: false,
@@ -364,13 +298,12 @@ app.get('/api/inventario', async (req, res) => {
         console.error('Error al obtener inventario:', error);
         res.status(500).json({
             success: false,
-            message: 'Error al obtener resumen de inventario',
+            message: 'Error al obtener inventario',
             error: error.message
         });
     }
 });
 
-// Manejo de rutas no encontradas
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -381,25 +314,18 @@ app.use('*', (req, res) => {
     });
 });
 
-// Middleware para manejo de errores globales
 app.use((err, req, res, next) => {
     console.error('Error no manejado:', err.stack);
     res.status(500).json({
         success: false,
-        message: 'Error interno del servidor',
+        message: 'Error del servidor',
         error: process.env.NODE_ENV === 'development' ? err.message : 'Error interno'
     });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
-    console.log(`📊 API Endpoints:`);
-    console.log(`   GET  http://localhost:${PORT}/api/productos`);
-    console.log(`   POST http://localhost:${PORT}/api/productos`);
-    console.log(`   GET  http://localhost:${PORT}/api/inventario`);
-    console.log(`📖 Documentación Swagger: http://localhost:${PORT}/api-docs`);
-    console.log(`\n✨ Sistema de Inventario Textil - Con PostgreSQL y Swagger`);
+    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+    console.log(`Documentación Swagger: http://localhost:${PORT}/api-docs`);
 });
 
 module.exports = app;
